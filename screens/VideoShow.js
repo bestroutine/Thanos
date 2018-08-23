@@ -15,9 +15,8 @@ export default class VideoShowScreen extends React.Component {
       headerBackTitleStyle: {
         color: "#666666"
       },
-      tabBarVisible: false
-      
-      //   headerBackImage: (<Image/>)
+      tabBarVisible: false,
+      headerBackImage: (<Image source={require("../assets/images/pages/backArrow.png")}/>)
     };
   };
 

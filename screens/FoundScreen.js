@@ -19,13 +19,19 @@ import { createMaterialTopTabNavigator } from "react-navigation";
 import { setFont, setSize } from "../utils/resolution";
 
 export default class FoundScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     title: "发现",
     headerStyle: {
       backgroundColor: "#FFF",
       borderBottomWidth: 0
-    }
-  };
+    },
+    tabBarVisible: navigation.getParam('tabBarVisible') === false ? false : true
+  });
+
+  componentWillMount() {
+    console.log('will mount')
+    this.props.navigation.setParams({ tabBarVisible: true });
+  }
   constructor(props) {
     super(props);
 

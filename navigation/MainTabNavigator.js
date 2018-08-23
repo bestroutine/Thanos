@@ -25,7 +25,7 @@ FoundStack.navigationOptions = ({ navigation }) => {
   // get active route from navigation
   // const activeRoute = navigation.state.routes[navigation.state.index];
   // let tabBarVisible = !["VideoShow"].includes(activeRoute.routeName)
-  let tabBarVisible = true;
+  let tabBarVisible = navigation.getParam('tabBarVisible') === false ? false : true;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
   }
