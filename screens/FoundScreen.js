@@ -30,7 +30,7 @@ export default class FoundScreen extends React.Component {
 
   componentWillMount() {
     console.log('will mount')
-    this.props.navigation.setParams({ tabBarVisible: true });
+    this.props.navigation.setParams({ tabBarVisible: true,'headerTitle': '发现'});
   }
   constructor(props) {
     super(props);
