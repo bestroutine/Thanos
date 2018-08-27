@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet,View,Text,TextInput,Image} from 'react-native';
-import {setSize} from '../../utils/resolution';
+import {setSize,scaleW,scaleH} from '../../utils/resolution';
 const SearchImg = require('../../assets/images/pages/search.png');
 
 export default class Search extends Component {
@@ -36,9 +36,9 @@ const styles = StyleSheet.create({
 	},
 	search: {
 		position: 'absolute',
-		top: setSize(15),
+		top: setSize(20),
 		left: setSize(50),
-		width: setSize(50),
-		height: setSize(50),
+		width: setSize(40),
+		height: setSize(40),
 	}
 })

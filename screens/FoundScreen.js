@@ -17,6 +17,13 @@ import {
 
 import { createMaterialTopTabNavigator } from "react-navigation";
 import { setFont, setSize } from "../utils/resolution";
+import {
+  TOKEN,
+  BRIDGE,
+} from '../utils/constant';
+import VideoList from './found/VideoList'
+import PicList from './found/PicList'
+import EmptyComponent from './found/EmptyComponent'
 
 export default class FoundScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -50,14 +57,13 @@ export default class FoundScreen extends React.Component {
     this.setState({
       loading: true
     });
-    const url = `https://show.belle.net.cn/content/indexNew?start=${
+    const url = `${BRIDGE}/content/indexNew?start=${
       this.state.page
     }&end=10&listType=${this.state.category}`;
     fetch(url, {
       method: "GET",
       headers: {
-        Token:
-          "eyJvcGVuSWQiOiJvVGNWNjVTUjd5OU1TTkZhb0xQYlYxTGhUN3dZIiwic2NyZXdJZCI6Ind4ZjhlOTg4NmFjOTQ4MGViYSIsInVzZXJJZCI6IjJmOTU1N2EyYmQ5YzQ5OGU4MGJiM2UzZDIwNWNiZjZjIn0..0ce0b63cddd64f0f8034f9866f583cc8"
+        Token: TOKEN,
       }
     })
       .then(res => {
@@ -108,234 +114,16 @@ export default class FoundScreen extends React.Component {
     );
   };
 
-  _onPlay = (id, title) => {
-    console.log(id);
-    this.props.navigation.navigate("VideoShow", {
-      title: title,
-      id: id
-    });
-  };
-
   renderItem = ({ item }) => {
     if (item.contentType == 3) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            padding: setSize(30)
-          }}
-        >
-          <ImageBackground
-            fadeDuration={0}
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              width: setSize(690),
-              height: setSize(388),
-              borderRadius: 5
-            }}
-            source={{
-              uri: item.picOptimizeBigUrl
-            }}
-          >
-            <TouchableWithoutFeedback
-              onPress={() => this._onPlay(item.contentId, item.title)}
-            >
-              <Image
-                style={{
-                  width: setSize(100),
-                  height: setSize(100)
-                }}
-                source={require("../assets/images/pages/play.png")}
-              />
-            </TouchableWithoutFeedback>
-          </ImageBackground>
-
-          <Text
-            numberOfLines={1}
-            style={{
-              alignSelf: "flex-start",
-              textAlign: "left",
-              fontSize: setFont(24),
-              color: "#333",
-              height: 25,
-              lineHeight: 25,
-              marginTop: 11
-            }}
-          >
-            {item.title}
-          </Text>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              marginTop: 11
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center"
-              }}
-            >
-              <Image
-                style={{
-                  height: setSize(32),
-                  width: setSize(32),
-                  marginRight: setSize(10)
-                }}
-                source={require("../assets/images/pages/shop_icon.png")}
-              />
-              <Text
-                style={{
-                  fontSize: 11,
-                  height: 14,
-                  color: "#999"
-                }}
-              >
-                {item.shopName}
-              </Text>
-            </View>
-            <Text
-              style={{
-                fontSize: 11,
-                height: 14,
-                color: "#999"
-              }}
-            >
-              {new Date(item.ctime).toLocaleDateString().replace(/\//g, "-")}
-            </Text>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              marginTop: 16,
-              width: "100%"
-            }}
-          >
-            <Image
-              style={{
-                height: 14,
-                width: 14
-              }}
-              source={require("../assets/images/pages/foundLikeNo.png")}
-            />
-            <Text
-              style={{
-                marginLeft: 5,
-                color: "#999",
-                fontSize: 12
-              }}
-            >
-              {item.likeNum}
-            </Text>
-          </View>
-        </View>
-      );
+      return(<VideoList item={item} navigation={this.props.navigation}/>)
     } else if (item.contentType == 1) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            padding: setSize(30)
-          }}
-        >
-          <View
-            style={{
-              flex: 1
-            }}
-          >
-            <Image
-              style={{
-                height: setSize(330),
-                width: setSize(330),
-                borderRadius: 4
-              }}
-              source={{
-                uri: item.picOptimizeUrl
-              }}
-            />
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: setFont(24),
-                color: "#333",
-                height: setSize(30)
-              }}
-            >
-              {item.title}
-            </Text>
-          </View>
-          <View style={{ width: setSize(30) }} />
-          <View
-            style={{
-              flex: 1
-            }}
-          >
-            <Image
-              style={{
-                height: setSize(330),
-                width: setSize(330),
-                borderRadius: 5
-              }}
-              source={{
-                uri: item.picOptimizeUrl
-              }}
-            />
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: setFont(24),
-                color: "#333",
-                height: setSize(30)
-              }}
-            >
-              {item.title}
-            </Text>
-          </View>
-        </View>
-      );
+      return (<PicList item={item} navigation={this.props.navigation}/>);
     }
   };
 
   emptyComponent = height => (
-    <View
-      style={{
-        flex: 1,
-        height: this.state.contentListHeight,
-        alignItems: "center",
-        // justifyContent: "center",
-        backgroundColor: "#FFF",
-        paddingTop: setSize(318 - 88)
-      }}
-    >
-      <Image
-        style={{
-          width: setSize(230),
-          height: setSize(230)
-        }}
-        source={require("../assets/images/pages/noFoundTwo.png")}
-      />
-      <Text
-        style={{
-          color: "#999999",
-          fontSize: 14
-        }}
-      >
-        一大波精彩内容正在赶来 敬请期待
-      </Text>
-    </View>
+    <EmptyComponent contentListHeight={this.state.contentListHeight} />
   );
 
   onCategoryChange = category => {
@@ -361,7 +149,9 @@ export default class FoundScreen extends React.Component {
             backgroundColor: "#FFF",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
+            borderBottomWidth: 1,
+            borderBottomColor: '#E5E5E5',
           }}
         >
           <Button
