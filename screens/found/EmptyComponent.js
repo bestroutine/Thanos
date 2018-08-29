@@ -23,10 +23,8 @@ export default class EmptyComponent extends React.Component {
       <View
         style={{
           flex: 1,
-          // height: this.state.contentListHeight,
           height: this.props.contentListHeight,
           alignItems: "center",
-          // justifyContent: "center",
           backgroundColor: "#FFF",
           paddingTop: setSize(318 - 88)
         }}

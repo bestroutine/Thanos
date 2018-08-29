@@ -125,30 +125,56 @@ export default class VideoList extends React.Component {
         </View>
         <View
           style={{
-            flex: 1,
+            flex:1,
             flexDirection: "row",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            marginTop: 16,
+            marginTop: setSize(22),
             width: "100%"
           }}
         >
-          <Image
+          <View
             style={{
-              height: 14,
-              width: 14
-            }}
-            source={require("../../assets/images/pages/foundLikeNo.png")}
-          />
-          <Text
-            style={{
-              marginLeft: 5,
-              color: "#999",
-              fontSize: 12
+              justifyContent: "flex-start",
+              alignItems: "center",
+              borderWidth: this.props.item.promotion.length>0? 1: 0,
+              borderColor: '#00BBB4',
+              paddingTop:setSize(2),
+              paddingBottom:setSize(2),
+              paddingLeft:setSize(3),
+              paddingRight:setSize(3),
             }}
           >
-            {this.props.item.likeNum}
-          </Text>
+            <Text 
+              style={{
+                color:'#00BBB4',
+                fontSize: setFont(22)
+              }}
+            >{this.props.item.promotion.length>0?this.props.item.promotion[0].promotion_name:''}</Text>
+          </View>
+          <View
+            style={{
+              flex:1,
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              style={{
+                height: 14,
+                width: 14
+              }}
+              source={require("../../assets/images/pages/foundLikeNo.png")}
+            />
+            <Text
+              style={{
+                marginLeft: 5,
+                color: "#999",
+                fontSize: 12
+              }}
+            >
+              {this.props.item.likeNum}
+            </Text>
+          </View>
         </View>
       </View>
     );

@@ -45,11 +45,14 @@ export default class FoundScreen extends React.Component {
     this.state = {
       error: false,
       page: 0,
+      pageSize: 10,
       data: [],
+      newData: [],
       refreshing: false,
       loading: false,
       category: 1,
-      contentListHeight: 0
+      contentListHeight: 0,
+      residue: {}, //余下单独的图片数据
     };
   }
 
@@ -59,7 +62,8 @@ export default class FoundScreen extends React.Component {
     });
     const url = `${BRIDGE}/content/indexNew?start=${
       this.state.page
-    }&end=10&listType=${this.state.category}`;
+    }&end=${this.state.pageSize}&listType=${this.state.category}`;
+    console.log(url);
     fetch(url, {
       method: "GET",
       headers: {
@@ -71,13 +75,95 @@ export default class FoundScreen extends React.Component {
         return res.json();
       })
       .then(res => {
-        let data = this.state.refreshing ? [] : this.state.data;
+        console.log(res.data.data);
+        let new_data = this.state.refreshing ? [] : this.state.newData;
+        let v_list = [];
+        let p_list = [];
+        res.data.data.map((item)=>{
+          if(item.contentType==3){
+            v_list.push(item);
+          }else{
+            p_list.push(item);
+          }
+        })
+        // ********以下图片数据处理**********
+        let newpicarr = [];
+        let tmppicArr = [];
+        if(JSON.stringify(this.state.residue) != '{}'){ //判断residue是否为空对象
+          p_list.unshift(this.state.residue);  //不是空对象就push 到图片数据的最前面
+          this.setState({  //push 之后置空
+            residue: {}
+          })
+        }
+        if(p_list.length%2 ==1){
+          this.setState({
+            residue: p_list[p_list.length-1]
+          })
+        }
+        for(let i=0; i<p_list.length; i++){
+          if(!tmppicArr.includes(p_list[i])&&(i+1)<p_list.length) { //
+            newpicarr.push([p_list[i],p_list[i+1]]);
+            tmppicArr.push(p_list[i]);
+            tmppicArr.push(p_list[i+1]);
+
+          }
+        }
+        // ********以上图片数据处理**********
+        // ********以下视频数据处理**********
+        let newvideoarr =[];
+        v_list.map((v_tip)=>{
+          newvideoarr.push([v_tip]);
+        })
+        // ********以上视频数据处理**********
+        // ********以下数据整合**********
+        let newarr = [];
+        if(this.state.category == "3"){
+          newarr = [...newvideoarr];
+        }else{
+          if(this.state.newData[0].contentType==3){
+            //如果第一条是视频
+            newarr.push(newvideoarr[0]);
+            let n =1;
+            newpicarr.map((item,index)=>{
+              newarr.push(item);
+              if(index%2==1){
+                if(n < newvideoarr.length){
+                  newarr.push(newvideoarr[n]);
+                  n = n+1;
+                } 
+              }
+            })
+            for(let i = n ; i< newvideoarr.length; n++){
+              newarr.push(newvideoarr[n])
+            }
+          }else{
+            //不是视频就先加载图片
+            let num =0;
+            newpicarr.map((item,index)=>{
+              newarr.push(item);
+              if(index%2==1){
+                if(num < newvideoarr.length){
+                  newarr.push(newvideoarr[num]);
+                  num = num+1;
+                } 
+              }
+            })
+            for(let i = num ; num< newvideoarr.length; num++){
+              newarr.push(newvideoarr[num])
+            }
+          }
+        }
+        // console.log('--------------')
+        // console.log(newarr);
+        // 整合后的最新的数据
         this.setState({
-          data: [...data, ...res.data.data],
+          newData: [...new_data, ...newarr],
           error: res.error || null,
           loading: false,
           refreshing: false
         });
+        // console.log(']]]]]]]]]]]')
+        // console.log(this.state.newData)
       })
       .catch(err => {
         console.log("==> fetch error", err);
@@ -95,7 +181,8 @@ export default class FoundScreen extends React.Component {
         page: 0,
         refreshing: true,
         loading: false,
-        data: []
+        data: [],
+        residue: {}
       },
       () => {
         this.request();
@@ -106,7 +193,7 @@ export default class FoundScreen extends React.Component {
   handleLoadMore = () => {
     this.setState(
       {
-        page: this.state.page + 1
+        page: this.state.page + this.state.pageSize
       },
       () => {
         this.request();
@@ -115,9 +202,9 @@ export default class FoundScreen extends React.Component {
   };
 
   renderItem = ({ item }) => {
-    if (item.contentType == 3) {
-      return(<VideoList item={item} navigation={this.props.navigation}/>)
-    } else if (item.contentType == 1) {
+    if (item[0].contentType == 3) {
+      return(<VideoList item={item[0]} navigation={this.props.navigation}/>)
+    } else{
       return (<PicList item={item} navigation={this.props.navigation}/>);
     }
   };
@@ -132,7 +219,8 @@ export default class FoundScreen extends React.Component {
         category: category,
         page: 0,
         // data: [],
-        refreshing: true
+        refreshing: true,
+        residue: {}
       },
       () => {
         this.request();
@@ -172,9 +260,9 @@ export default class FoundScreen extends React.Component {
         </View>
         <FlatList
           style={{ flex: 1, backgroundColor: "#FFF" }}
-          data={this.state.data || []}
+          data={this.state.newData || []}
           renderItem={this.renderItem}
-          keyExtractor={item => `${item.contentId}`}
+          keyExtractor={item => `${item[0].contentId}`}
           ListEmptyComponent={this.emptyComponent(this.height)}
           refreshing={this.state.refreshing}
           onRefresh={this.handleRefresh}
@@ -185,7 +273,7 @@ export default class FoundScreen extends React.Component {
               this.setState({ contentListHeight: height });
             }
           }}
-          // onEndReached={this.handleLoadMore}
+          onEndReached={this.handleLoadMore}
         />
       </View>
     );
