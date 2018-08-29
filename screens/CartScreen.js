@@ -9,7 +9,9 @@ export default class LinksScreen extends React.Component {
             borderBottomWidth: 0
         }
     };
-
+    componentWillMount() {
+        this.props.navigation.setParams({'headerTitle': '购物车'})
+    }
     render() {
         return (
             <ScrollView

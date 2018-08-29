@@ -17,6 +17,13 @@ import {
 
 import { createMaterialTopTabNavigator } from "react-navigation";
 import { setFont, setSize } from "../utils/resolution";
+import {
+  TOKEN,
+  BRIDGE,
+} from '../utils/constant';
+import VideoList from './found/VideoList'
+import PicList from './found/PicList'
+import EmptyComponent from './found/EmptyComponent'
 
 export default class FoundScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -30,7 +37,8 @@ export default class FoundScreen extends React.Component {
 
   componentWillMount() {
     console.log('will mount')
-    this.props.navigation.setParams({ tabBarVisible: true });
+    this.request();
+    this.props.navigation.setParams({ tabBarVisible: true,'headerTitle': '发现'});
   }
   constructor(props) {
     super(props);
@@ -38,11 +46,14 @@ export default class FoundScreen extends React.Component {
     this.state = {
       error: false,
       page: 0,
+      pageSize: 10,
       data: [],
+      newData: [],
       refreshing: false,
       loading: false,
       category: 1,
-      contentListHeight: 0
+      contentListHeight: 0,
+      residue: {}, //余下单独的图片数据
     };
   }
 
@@ -50,14 +61,14 @@ export default class FoundScreen extends React.Component {
     this.setState({
       loading: true
     });
-    const url = `https://show.belle.net.cn/content/indexNew?start=${
+    const url = `${BRIDGE}/content/indexNew?start=${
       this.state.page
-    }&end=10&listType=${this.state.category}`;
+    }&end=${this.state.pageSize}&listType=${this.state.category}`;
+    console.log(url);
     fetch(url, {
       method: "GET",
       headers: {
-        Token:
-          "eyJvcGVuSWQiOiJvVGNWNjVTUjd5OU1TTkZhb0xQYlYxTGhUN3dZIiwic2NyZXdJZCI6Ind4ZjhlOTg4NmFjOTQ4MGViYSIsInVzZXJJZCI6IjJmOTU1N2EyYmQ5YzQ5OGU4MGJiM2UzZDIwNWNiZjZjIn0..0ce0b63cddd64f0f8034f9866f583cc8"
+        Token: TOKEN,
       }
     })
       .then(res => {
@@ -65,13 +76,95 @@ export default class FoundScreen extends React.Component {
         return res.json();
       })
       .then(res => {
-        let data = this.state.refreshing ? [] : this.state.data;
+        console.log(res.data.data);
+        let new_data = this.state.refreshing ? [] : this.state.newData;
+        let v_list = [];
+        let p_list = [];
+        res.data.data.map((item)=>{
+          if(item.contentType==3){
+            v_list.push(item);
+          }else{
+            p_list.push(item);
+          }
+        })
+        // ********以下图片数据处理**********
+        let newpicarr = [];
+        let tmppicArr = [];
+        if(JSON.stringify(this.state.residue) != '{}'){ //判断residue是否为空对象
+          p_list.unshift(this.state.residue);  //不是空对象就push 到图片数据的最前面
+          this.setState({  //push 之后置空
+            residue: {}
+          })
+        }
+        if(p_list.length%2 ==1){
+          this.setState({
+            residue: p_list[p_list.length-1]
+          })
+        }
+        for(let i=0; i<p_list.length; i++){
+          if(!tmppicArr.includes(p_list[i])&&(i+1)<p_list.length) { //
+            newpicarr.push([p_list[i],p_list[i+1]]);
+            tmppicArr.push(p_list[i]);
+            tmppicArr.push(p_list[i+1]);
+
+          }
+        }
+        // ********以上图片数据处理**********
+        // ********以下视频数据处理**********
+        let newvideoarr =[];
+        v_list.map((v_tip)=>{
+          newvideoarr.push([v_tip]);
+        })
+        // ********以上视频数据处理**********
+        // ********以下数据整合**********
+        let newarr = [];
+        if(this.state.category == "3"){
+          newarr = [...newvideoarr];
+        }else{
+          if(res.data.data[0].contentType==3){
+            //如果第一条是视频
+            newarr.push(newvideoarr[0]);
+            let n =1;
+            newpicarr.map((item,index)=>{
+              newarr.push(item);
+              if(index%2==1){
+                if(n < newvideoarr.length){
+                  newarr.push(newvideoarr[n]);
+                  n = n+1;
+                } 
+              }
+            })
+            for(let i = n ; i< newvideoarr.length; n++){
+              newarr.push(newvideoarr[n])
+            }
+          }else{
+            //不是视频就先加载图片
+            let num =0;
+            newpicarr.map((item,index)=>{
+              newarr.push(item);
+              if(index%2==1){
+                if(num < newvideoarr.length){
+                  newarr.push(newvideoarr[num]);
+                  num = num+1;
+                } 
+              }
+            })
+            for(let i = num ; num< newvideoarr.length; num++){
+              newarr.push(newvideoarr[num])
+            }
+          }
+        }
+        // console.log('--------------')
+        // console.log(newarr);
+        // 整合后的最新的数据
         this.setState({
-          data: [...data, ...res.data.data],
+          newData: [...new_data, ...newarr],
           error: res.error || null,
           loading: false,
           refreshing: false
         });
+        // console.log(']]]]]]]]]]]')
+        // console.log(this.state.newData)
       })
       .catch(err => {
         console.log("==> fetch error", err);
@@ -89,7 +182,8 @@ export default class FoundScreen extends React.Component {
         page: 0,
         refreshing: true,
         loading: false,
-        data: []
+        data: [],
+        residue: {}
       },
       () => {
         this.request();
@@ -100,7 +194,7 @@ export default class FoundScreen extends React.Component {
   handleLoadMore = () => {
     this.setState(
       {
-        page: this.state.page + 1
+        page: this.state.page + this.state.pageSize
       },
       () => {
         this.request();
@@ -108,234 +202,16 @@ export default class FoundScreen extends React.Component {
     );
   };
 
-  _onPlay = (id, title) => {
-    console.log(id);
-    this.props.navigation.navigate("VideoShow", {
-      title: title,
-      id: id
-    });
-  };
-
   renderItem = ({ item }) => {
-    if (item.contentType == 3) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
-            padding: setSize(30)
-          }}
-        >
-          <ImageBackground
-            fadeDuration={0}
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              width: setSize(690),
-              height: setSize(388),
-              borderRadius: 5
-            }}
-            source={{
-              uri: item.picOptimizeBigUrl
-            }}
-          >
-            <TouchableWithoutFeedback
-              onPress={() => this._onPlay(item.contentId, item.title)}
-            >
-              <Image
-                style={{
-                  width: setSize(100),
-                  height: setSize(100)
-                }}
-                source={require("../assets/images/pages/play.png")}
-              />
-            </TouchableWithoutFeedback>
-          </ImageBackground>
-
-          <Text
-            numberOfLines={1}
-            style={{
-              alignSelf: "flex-start",
-              textAlign: "left",
-              fontSize: setFont(24),
-              color: "#333",
-              height: 25,
-              lineHeight: 25,
-              marginTop: 11
-            }}
-          >
-            {item.title}
-          </Text>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              marginTop: 11
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center"
-              }}
-            >
-              <Image
-                style={{
-                  height: setSize(32),
-                  width: setSize(32),
-                  marginRight: setSize(10)
-                }}
-                source={require("../assets/images/pages/shop_icon.png")}
-              />
-              <Text
-                style={{
-                  fontSize: 11,
-                  height: 14,
-                  color: "#999"
-                }}
-              >
-                {item.shopName}
-              </Text>
-            </View>
-            <Text
-              style={{
-                fontSize: 11,
-                height: 14,
-                color: "#999"
-              }}
-            >
-              {new Date(item.ctime).toLocaleDateString().replace(/\//g, "-")}
-            </Text>
-          </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              marginTop: 16,
-              width: "100%"
-            }}
-          >
-            <Image
-              style={{
-                height: 14,
-                width: 14
-              }}
-              source={require("../assets/images/pages/foundLikeNo.png")}
-            />
-            <Text
-              style={{
-                marginLeft: 5,
-                color: "#999",
-                fontSize: 12
-              }}
-            >
-              {item.likeNum}
-            </Text>
-          </View>
-        </View>
-      );
-    } else if (item.contentType == 1) {
-      return (
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            padding: setSize(30)
-          }}
-        >
-          <View
-            style={{
-              flex: 1
-            }}
-          >
-            <Image
-              style={{
-                height: setSize(330),
-                width: setSize(330),
-                borderRadius: 4
-              }}
-              source={{
-                uri: item.picOptimizeUrl
-              }}
-            />
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: setFont(24),
-                color: "#333",
-                height: setSize(30)
-              }}
-            >
-              {item.title}
-            </Text>
-          </View>
-          <View style={{ width: setSize(30) }} />
-          <View
-            style={{
-              flex: 1
-            }}
-          >
-            <Image
-              style={{
-                height: setSize(330),
-                width: setSize(330),
-                borderRadius: 5
-              }}
-              source={{
-                uri: item.picOptimizeUrl
-              }}
-            />
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: setFont(24),
-                color: "#333",
-                height: setSize(30)
-              }}
-            >
-              {item.title}
-            </Text>
-          </View>
-        </View>
-      );
+    if (item[0].contentType == 3) {
+      return(<VideoList item={item[0]} navigation={this.props.navigation}/>)
+    } else{
+      return (<PicList item={item} navigation={this.props.navigation}/>);
     }
   };
 
   emptyComponent = height => (
-    <View
-      style={{
-        flex: 1,
-        height: this.state.contentListHeight,
-        alignItems: "center",
-        // justifyContent: "center",
-        backgroundColor: "#FFF",
-        paddingTop: setSize(318 - 88)
-      }}
-    >
-      <Image
-        style={{
-          width: setSize(230),
-          height: setSize(230)
-        }}
-        source={require("../assets/images/pages/noFoundTwo.png")}
-      />
-      <Text
-        style={{
-          color: "#999999",
-          fontSize: 14
-        }}
-      >
-        一大波精彩内容正在赶来 敬请期待
-      </Text>
-    </View>
+    <EmptyComponent contentListHeight={this.state.contentListHeight} />
   );
 
   onCategoryChange = category => {
@@ -344,7 +220,8 @@ export default class FoundScreen extends React.Component {
         category: category,
         page: 0,
         // data: [],
-        refreshing: true
+        refreshing: true,
+        residue: {}
       },
       () => {
         this.request();
@@ -361,7 +238,9 @@ export default class FoundScreen extends React.Component {
             backgroundColor: "#FFF",
             flexDirection: "row",
             justifyContent: "space-around",
-            alignItems: "center"
+            alignItems: "center",
+            borderBottomWidth: 1,
+            borderBottomColor: '#E5E5E5',
           }}
         >
           <Button
@@ -382,9 +261,9 @@ export default class FoundScreen extends React.Component {
         </View>
         <FlatList
           style={{ flex: 1, backgroundColor: "#FFF" }}
-          data={this.state.data || []}
+          data={this.state.newData || []}
           renderItem={this.renderItem}
-          keyExtractor={item => `${item.contentId}`}
+          keyExtractor={item => `${item[0].contentId}`}
           ListEmptyComponent={this.emptyComponent(this.height)}
           refreshing={this.state.refreshing}
           onRefresh={this.handleRefresh}
@@ -395,7 +274,7 @@ export default class FoundScreen extends React.Component {
               this.setState({ contentListHeight: height });
             }
           }}
-          // onEndReached={this.handleLoadMore}
+          onEndReached={this.handleLoadMore}
         />
       </View>
     );
