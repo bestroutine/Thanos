@@ -128,7 +128,7 @@ export default class PicList extends React.Component {
                 color:'#00BBB4',
                 fontSize: setFont(22)
               }} 
-            >{one_data.promotion.length>0?one_data.promotion[0].promotion_name:'优惠'}</Text>
+            >{one_data.promotion.length>0?one_data.promotion[0].promotion_name:''}</Text>
           </View>
           <View
             style={{

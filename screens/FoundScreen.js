@@ -37,6 +37,7 @@ export default class FoundScreen extends React.Component {
 
   componentWillMount() {
     console.log('will mount')
+    this.request();
     this.props.navigation.setParams({ tabBarVisible: true,'headerTitle': '发现'});
   }
   constructor(props) {
@@ -120,7 +121,7 @@ export default class FoundScreen extends React.Component {
         if(this.state.category == "3"){
           newarr = [...newvideoarr];
         }else{
-          if(this.state.newData[0].contentType==3){
+          if(res.data.data[0].contentType==3){
             //如果第一条是视频
             newarr.push(newvideoarr[0]);
             let n =1;
