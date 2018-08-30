@@ -4,22 +4,18 @@ import { setFont, setSize } from "../utils/resolution";
 import { Video } from "expo";
 
 export default class VideoShowScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: navigation.getParam("title", "视频"),
-      headerStyle: {
-        backgroundColor: "#FFF",
-        borderBottomWidth: 0
-      },
-      headerBackTitle: null,
-      headerBackTitleStyle: {
-        color: "#666666"
-      },
-      tabBarVisible: false,
-      headerBackImage: (<Image source={require("../assets/images/pages/backArrow.png")}/>)
+  constructor(props) {
+    super(props);
+    this.state = {
+      cId: this.props.navigation.getParam('cId'),
     };
-  };
-
+  }
+  componentWillMount() {
+    console.log(this.state.cId);
+    const { navigation } = this.props;
+    const c_title = navigation.getParam('cTitle');
+    this.props.navigation.setParams({'headerTitle': c_title})
+  }
   render() {
     const { navigation } = this.props;
     const contentId = navigation.getParam("id", "");

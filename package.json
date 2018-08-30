@@ -17,6 +17,7 @@
     "expo": "29.0.0",
     "react": "16.3.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-29.0.0.tar.gz",
+    "react-native-swiper": "^1.5.13",
     "react-native-video": "^3.2.0",
     "react-navigation": "^2.9.3"
   },

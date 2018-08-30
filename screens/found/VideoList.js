@@ -22,8 +22,8 @@ export default class VideoList extends React.Component {
     console.log(id);
     console.log(this.props)
     this.props.navigation.navigate("VideoShow", {
-      title: title,
-      id: id
+      cTitle: title,
+      cId: id
     });
   };
 

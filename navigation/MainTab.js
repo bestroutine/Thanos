@@ -4,11 +4,12 @@ import { createBottomTabNavigator,createStackNavigator } from 'react-navigation'
 import FoundScreen from "../screens/FoundScreen";
 import CartScreen from "../screens/CartScreen";
 import MyScreen from "../screens/MyScreen";
-import VideoShowScreen from "../screens/VideoShow";
-import MyLove from '../components/mine/MyLove';
-import MyCreate from '../components/mine/MyCreate';
-import NoticeScreen from '../components/mine/Notice';
 import TabBarIcon from "../components/TabBarIcon";
+import VideoShowScreen from "../screens/VideoShow";
+import MyLove from '../screens/mine/MyLove';
+import MyCreate from '../screens/mine/MyCreate';
+import NoticeScreen from '../screens/mine/Notice';
+import ContentScreen from "../screens/Content";
 
 
 const tab = createBottomTabNavigator(
@@ -68,10 +69,55 @@ export const AppNavigator = createStackNavigator(
         },
         VideoShow: {
             screen: VideoShowScreen,
-            navigationOptions: ({ navigation }) => ({
-                headerTitle:'视频',
+            navigationOptions: ({ navigation }) => {
+            let headerTitle = navigation.getParam('headerTitle', "")
+            if (navigation.state.routes) {
+                let active = navigation.state.routes[navigation.state.index]
+                if (active.params) {
+                    headerTitle = active.params.headerTitle
+                }
+                console.log('hahah', active.params, 'active')
+            }
+            return {
+                headerTitle,
+                headerStyle: {
+                    backgroundColor: "#FFF",
+                    borderBottomWidth: 0
+                },
                 headerBackTitle: null,
-            }),
+                headerBackTitleStyle: {
+                    color: "#666666"
+                },
+                tabBarVisible: false,
+                headerBackImage: (<Image source={require("../assets/images/pages/backArrow.png")}/>)
+
+            }},
+        },
+        Content: {
+            screen: ContentScreen,
+            navigationOptions: ({ navigation }) => {
+            let headerTitle = navigation.getParam('headerTitle', "")
+            if (navigation.state.routes) {
+                let active = navigation.state.routes[navigation.state.index]
+                if (active.params) {
+                    headerTitle = active.params.headerTitle
+                }
+                console.log('hahah', active.params, 'active')
+            }
+            return {
+                headerTitle,
+                headerStyle: {
+                    backgroundColor: "#FFF",
+                    borderBottomWidth: 0
+                },
+                headerBackTitle: null,
+                headerBackTitleStyle: {
+                    color: "#666666"
+                },
+                tabBarVisible: false,
+                headerBackImage: (<Image source={require("../assets/images/pages/backArrow.png")}/>)
+
+            }},
         }
     },
     {
