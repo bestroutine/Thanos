@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,View,Text,TextInput,Image} from 'react-native';
+import {StyleSheet,View,Text,TextInput,Image,ScrollView} from 'react-native';
 import { setFont, setSize } from "../utils/resolution";
 import {
   TOKEN,
@@ -17,17 +17,17 @@ export default class Content extends Component {
       detailPic: [],  //图片内容的数据
       contentDetail: {},
       creatorDetail: {},
+      promotionDetail: [],
     };
+    
 	}
 
   componentWillMount() {
-  	// console.log(this.state.cId);
+    this.request();
   	const { navigation } = this.props;
     const c_title = navigation.getParam('cTitle');
     this.props.navigation.setParams({'headerTitle': c_title})
-    this.request();
   }
-
   request = () => {
     const url = `${BRIDGE}/content/show?cid=${
       this.state.cId
@@ -43,12 +43,12 @@ export default class Content extends Component {
         return res.json();
       })
       .then(res => {
-        // console.log('111111111')
-        console.log(res.data)
+        // console.log(res.data)
         this.setState({
           detailPic: res.data.pics,
           contentDetail: res.data,
-          creatorDetail: res.data.creator
+          creatorDetail: res.data.creator,
+          promotionDetail: res.data.promotions || [],
         })
       })
       .catch(err => {
@@ -63,11 +63,15 @@ export default class Content extends Component {
 
 	render() {
     return (
-    	<View style={{ flex: 1, backgroundColor: '#fff' }}>
+    	<ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
         <SwiperComponent detailPic={this.state.detailPic} />
         <AuthorComponent detailCreator={this.state.creatorDetail} title={this.state.contentDetail.title}/>
-        <ShopComponent style={{height: 200, backgroundColor: 'red'}}/>
-    	</View>
+        <ShopComponent 
+          detailCreator={this.state.creatorDetail}
+          detailPic={this.state.detailPic} 
+          detailPromotion={this.state.promotionDetail}
+        />
+    	</ScrollView>
     );
 	}
 }

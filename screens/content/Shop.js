@@ -1,40 +1,72 @@
 import React, {Component} from 'react';
 import {StyleSheet,View,Text,TextInput,Image} from 'react-native';
 import { setFont, setSize } from "../../utils/resolution";
+import GoodList from './GoodList'
 
 export default class Shop extends Component {
 	constructor(props) {
   	super(props);
-  	
 	}
 
-  componentWillMount() {
-  	
-  }
 
 	render() {
-    console.log(this.props.detailCreator)
-    console.log(this.props.title)
+    // console.log(this.props.detailCreator)
+    // console.log(this.props.detailPic)
+    // console.log(this.props.detailPromotion)
+    let creatorData = this.props.detailCreator
+    let picData = this.props.detailPic
+    let promotionData = this.props.detailPromotion
+    
     return (
     	<View style={styles.container}>
         <View 
           style={{
-            height: setSize(140)
+            height: setSize(140),
           }}
         >
         	<View style={styles.shop_title}>
-
             <View style={styles.shop_desc}>
               <Image 
                 style={styles.shop_img} 
                 source={require('../../assets/images/pages/shop_icon.png')} />
-              <Text style={styles.shop_name}>国贸nike三期</Text>
+              <Text style={styles.shop_name}>{creatorData.shopName}</Text>
             </View>
 
-            <View styles={styles.goshop}>
+            <View>
               <Text style={styles.goshop_text}>进店看看</Text>
             </View>
-
+          </View>
+        </View>
+        <View
+          style={{
+            marginLeft: setSize(30),
+            marginRight: setSize(30),
+            marginBottom: setSize(100)
+          }}>
+          <View 
+            style={[
+              styles.activity,
+              {
+                display: promotionData.length>0?'flex': 'none'
+              }
+            ]}
+          >
+            <Text 
+              style={[
+                styles.act_name,
+                {
+                  color:'#00BBB4',
+                  borderColor:'#00BBB4'
+                }
+              ]}>
+              {promotionData.length > 0 ? promotionData[0].promotion_name: ''}
+            </Text>
+            <Text style={[styles.act_time,{color:'#999'}]}>
+              {promotionData.length > 0 ?promotionData[0].now_time: ''}
+            </Text>
+          </View>
+          <View>
+            <GoodList goodList={picData} />
           </View>
         </View>
     	</View>
@@ -55,7 +87,6 @@ const styles = StyleSheet.create({
     marginRight: setSize(30),
     borderBottomWidth: 1,
     borderColor: '#e5e5e5',
-
   },
   shop_desc:{
     flexDirection: "row",
@@ -70,9 +101,6 @@ const styles = StyleSheet.create({
     color: '#333',
     marginLeft: setSize(18)
   },
-  goshop:{
-    
-  },
   goshop_text:{
     textAlign:'center',
     fontSize:setFont(24),
@@ -80,14 +108,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor:'rgba(0,187,180,1)',
     textAlignVertical: 'center',
-    paddingTop: setSize(15),
-    paddingBottom: setSize(15),
+    paddingTop: setSize(12),
+    paddingBottom: setSize(12),
     paddingLeft: setSize(20),
     paddingRight: setSize(20),
     borderWidth: 1,
     overflow: 'hidden',
     borderRadius: setSize(4),
     borderColor:'rgba(0,187,180,1)'
+  },
+  activity:{
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: setSize(32)
+  },
+  act_name:{
+    borderRadius:setSize(2),
+    borderWidth:1,
+    fontSize:setFont(20),
+    marginRight: setSize(20),
+    padding:setSize(2)
+  },
+  act_time:{
+    fontSize:setFont(24),
   }
 })
 

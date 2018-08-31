@@ -13,8 +13,8 @@ export default class Author extends Component {
   }
 
 	render() {
-    console.log(this.props.detailCreator)
-    console.log(this.props.title)
+    // console.log(this.props.detailCreator)
+    // console.log(this.props.title)
     return (
     	<View>
       	<View style={styles.author}>

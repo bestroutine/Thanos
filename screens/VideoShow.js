@@ -2,12 +2,17 @@ import React from "react";
 import { ScrollView, StyleSheet, Image, View, Text } from "react-native";
 import { setFont, setSize } from "../utils/resolution";
 import { Video } from "expo";
+import {
+  TOKEN,
+  BRIDGE,
+} from '../utils/constant';
 
 export default class VideoShowScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       cId: this.props.navigation.getParam('cId'),
+      videoData: {}
     };
   }
   componentWillMount() {
@@ -15,7 +20,38 @@ export default class VideoShowScreen extends React.Component {
     const { navigation } = this.props;
     const c_title = navigation.getParam('cTitle');
     this.props.navigation.setParams({'headerTitle': c_title})
+    this.request();
   }
+  request = () => {
+    const url = `${BRIDGE}/content/show?cid=${
+      this.state.cId
+    }`;
+    fetch(url, {
+      method: "GET",
+      headers: {
+        Token: TOKEN,
+      }
+    })
+      .then(res => {
+        console.log("started fetch");
+        return res.json();
+      })
+      .then(res => {
+        console.log(res.data)
+        this.setState({
+          videoData: res.data
+        })
+      })
+      .catch(err => {
+        console.log("==> fetch error", err);
+        this.setState({
+          error: err,
+          loading: false,
+          refreshing: false
+        });
+      });
+  }
+
   render() {
     const { navigation } = this.props;
     const contentId = navigation.getParam("id", "");
@@ -30,8 +66,7 @@ export default class VideoShowScreen extends React.Component {
         <View>
           <Video
             source={{
-              uri:
-                "https://wechat-xcx-1255389510.image.myqcloud.com/show/8e6d36e9e3f14fdea099d7c374e9f692.mp4"
+              uri:this.state.videoData.video_url
             }}
             rate={1.0}
             volume={1.0}

@@ -36,7 +36,7 @@ export default class FoundScreen extends React.Component {
   });
 
   componentWillMount() {
-    console.log('will mount')
+    // console.log('will mount')
     this.request();
     this.props.navigation.setParams({ tabBarVisible: true,'headerTitle': '发现'});
   }
@@ -64,7 +64,7 @@ export default class FoundScreen extends React.Component {
     const url = `${BRIDGE}/content/indexNew?start=${
       this.state.page
     }&end=${this.state.pageSize}&listType=${this.state.category}`;
-    console.log(url);
+    // console.log(url);
     fetch(url, {
       method: "GET",
       headers: {
@@ -76,7 +76,7 @@ export default class FoundScreen extends React.Component {
         return res.json();
       })
       .then(res => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         let new_data = this.state.refreshing ? [] : this.state.newData;
         let v_list = [];
         let p_list = [];

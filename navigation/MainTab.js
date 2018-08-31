@@ -130,7 +130,7 @@ export const AppNavigator = createStackNavigator(
             if (active.params) {
                 headerTitle = active.params.headerTitle
             }
-            console.log('hahah', active.params, 'active')
+            // console.log('hahah', active.params, 'active')
         }
         // console.log(navigation.state)
         return {
