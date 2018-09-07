@@ -11,10 +11,10 @@ import {
 import { WebBrowser } from 'expo';
 
 // import { MonoText } from '../components/StyledText';
-import MineBanner from '../components/mine/MineBanner'
-import MineList from '../components/mine/MineList'
-import MyLove from '../components/mine/MyLove'
-import MyCreate from '../components/mine/MyCreate'
+import MineBanner from './mine/MineBanner'
+import MineList from './mine/MineList'
+import MyLove from './mine/MyLove'
+import MyCreate from './mine/MyCreate'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {

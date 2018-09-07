@@ -8,7 +8,7 @@
     "platforms": ["ios", "android"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/1024.png",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -23,6 +23,9 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.belle.thanos"
+    },
+    "android": {
+      "package": "com.belle.thanos"
     }
   }
 }
