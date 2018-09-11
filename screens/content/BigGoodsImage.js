@@ -12,12 +12,19 @@ export default class BigGoodsImage extends Component {
     }
 	}
 
-  componentWillUpdate(nextProps,nextState) {
+  componentWillMount(nextProps,nextState) {
     if(this.state.goodsVisibleData == false){
       this.setState({
         goodsVisibleData: this.props.goodVisible
       })
-      return false
+    }
+  }
+  
+  componentWillReceiveProps(nextProps,nextState) {
+    if(this.state.goodsVisibleData == false){
+      this.setState({
+        goodsVisibleData: this.props.goodVisible
+      })
     }
   }
 

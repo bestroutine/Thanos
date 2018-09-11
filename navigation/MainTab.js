@@ -65,6 +65,7 @@ export const AppNavigator = createStackNavigator(
             navigationOptions: ({ navigation }) => ({
                 headerTitle:'售后须知',
                 headerBackTitle: null,
+                headerBackImage: (<Image source={require("../assets/images/pages/backArrow.png")}/>)
             }),
         },
         VideoShow: {

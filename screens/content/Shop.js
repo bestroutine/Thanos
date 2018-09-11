@@ -41,7 +41,7 @@ export default class Shop extends Component {
           style={{
             marginLeft: setSize(30),
             marginRight: setSize(30),
-            marginBottom: setSize(100)
+            marginBottom: setSize(30)
           }}>
           <View 
             style={[

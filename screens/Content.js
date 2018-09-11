@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,View,Text,TextInput,Image,ScrollView} from 'react-native';
+import {StyleSheet,View,Text,TextInput,Image,ScrollView,SafeAreaView,Alert} from 'react-native';
 import { setFont, setSize } from "../utils/resolution";
 import {
   TOKEN,
@@ -8,6 +8,8 @@ import {
 import SwiperComponent from './content/Swiper';
 import AuthorComponent from './content/Author';
 import ShopComponent from './content/Shop';
+const bag = require('../assets/images/pages/bag.png');
+const no_bag = require('../assets/images/pages/no_bag.png');
 
 export default class Content extends Component {
 	constructor(props) {
@@ -28,6 +30,11 @@ export default class Content extends Component {
     const c_title = navigation.getParam('cTitle');
     this.props.navigation.setParams({'headerTitle': c_title})
   }
+
+  goToBuy(){
+    Alert.alert('未开启支付功能，请线下店铺购买！');
+  }
+
   request = () => {
     const url = `${BRIDGE}/content/show?cid=${
       this.state.cId
@@ -43,7 +50,7 @@ export default class Content extends Component {
         return res.json();
       })
       .then(res => {
-        // console.log(res.data)
+        console.log(res.data)
         this.setState({
           detailPic: res.data.pics,
           contentDetail: res.data,
@@ -63,15 +70,78 @@ export default class Content extends Component {
 
 	render() {
     return (
-    	<ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
-        <SwiperComponent detailPic={this.state.detailPic} />
-        <AuthorComponent detailCreator={this.state.creatorDetail} title={this.state.contentDetail.title}/>
-        <ShopComponent 
-          detailCreator={this.state.creatorDetail}
-          detailPic={this.state.detailPic} 
-          detailPromotion={this.state.promotionDetail}
-        />
-    	</ScrollView>
+      <SafeAreaView style={{flex: 1}}>
+      	<ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
+          <SwiperComponent detailPic={this.state.detailPic} />
+          <AuthorComponent detailCreator={this.state.creatorDetail} title={this.state.contentDetail.title}/>
+          <ShopComponent 
+            detailCreator={this.state.creatorDetail}
+            detailPic={this.state.detailPic} 
+            detailPromotion={this.state.promotionDetail}
+          />
+      	</ScrollView>
+        <View style={{
+          height: setSize(98),
+          backgroundColor: '#f8f8f8',
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}>
+          <View style={{
+            flexDirection: "row",
+            alignItems: 'center',
+            marginLeft: setSize(32)
+          }}>
+            <View style={{position:'relative'}}>
+              <Image style={{
+                width:setSize(52),
+                height:setSize(52),
+                marginRight:setSize(20)
+                }} 
+                source={bag}
+              />
+              <View style={{
+                position: 'absolute',
+                top:setSize(-8),
+                right: setSize(4),
+                minWidth:setSize(36),
+                height:setSize(36),
+                borderRadius: setSize(18),
+                // overflow: 'hidden',
+                backgroundColor: '#00BBB4',
+                
+              }}>
+                <Text style={{
+                  color:'#fff',
+                  fontSize:setFont(22),
+                  textAlign:'center',
+                  lineHeight: setSize(36),
+                  paddingLeft: setSize(2),
+                  paddingRight: setSize(2)
+                }}>28</Text>
+              </View>
+            </View>
+            <Text style={{color:'#00BBB4',fontSize:setFont(40)}}>¥500</Text>
+          </View>
+          <View style={{
+            width: setSize(200),
+            height: '100%',
+            backgroundColor: '#00BBB4'
+          }}
+           
+          >
+            <Text style={{
+              color: '#fff',
+              fontSize: setFont(28),
+              textAlign: 'center',
+              lineHeight: setSize(98)
+            }}
+            onPress={()=>this.goToBuy()}
+            >
+              去结算
+            </Text>
+          </View>
+        </View>
+      </SafeAreaView>
     );
 	}
 }

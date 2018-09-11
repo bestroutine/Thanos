@@ -53,8 +53,6 @@ export default class VideoShowScreen extends React.Component {
   }
 
   render() {
-    const { navigation } = this.props;
-    const contentId = navigation.getParam("id", "");
     return (
       <ScrollView
         contentContainerStyle={{
