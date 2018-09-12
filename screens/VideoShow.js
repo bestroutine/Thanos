@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, Image, View, Text } from "react-native";
+import { ScrollView, StyleSheet, Image, View, Text, SafeAreaView } from "react-native";
 import { setFont, setSize } from "../utils/resolution";
 import { Video } from "expo";
 import {
@@ -16,7 +16,7 @@ export default class VideoShowScreen extends React.Component {
     };
   }
   componentWillMount() {
-    console.log(this.state.cId);
+    console.log(11111);
     const { navigation } = this.props;
     const c_title = navigation.getParam('cTitle');
     this.props.navigation.setParams({'headerTitle': c_title})
@@ -37,6 +37,7 @@ export default class VideoShowScreen extends React.Component {
         return res.json();
       })
       .then(res => {
+        console.log(222222);
         console.log(res.data)
         this.setState({
           videoData: res.data
@@ -52,33 +53,43 @@ export default class VideoShowScreen extends React.Component {
       });
   }
 
+  _handleVideoRef = component => {
+    console.log(component)
+    const playbackObject = component;
+  }
+
   render() {
+    console.log(33333)
     return (
+      <SafeAreaView style={{flex:1,backgroundColor:'#fff'}}>
       <ScrollView
         contentContainerStyle={{
           flex: 1,
-          alignItems: "center"
+          alignItems: "center",
         }}
         style={styles.container}
       >
+        <Video
+          source={{
+            uri:this.state.videoData.video_url
+          }}
+          ref={this._handleVideoRef}
+          rate={1.0}
+          volume={1.0}
+          isMuted={false}
+          useNativeControls={true}
+          resizeMode="contain"
+          shouldPlay={true}
+          isLooping={true}
+          style={styles.video}
+        />
         <View>
-          <Video
-            source={{
-              uri:this.state.videoData.video_url
-            }}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode="cover"
-            shouldPlay
-            isLooping
-            style={styles.video}
-          />
           <Text style={{ color: "#999999", fontSize: 14 }}>
             {JSON.stringify(this.props.navigation.state.params)}
           </Text>
         </View>
       </ScrollView>
+      </SafeAreaView>
     );
   }
 }
@@ -89,6 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000"
   },
   video: {
-    height: "100%"
+    height: "100%",
+    width: '100%',
   }
 });

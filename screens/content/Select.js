@@ -15,17 +15,35 @@ export default class Select extends Component {
 
   componentWillMount(nextProps,nextState) {
     if(this.state.selectVisible == false){
+      let shop_id = ''
+      for(let i=0; i<this.props.selectData.sku.length; i++){
+        let item = this.props.selectData.sku[i];
+        if(item.stock != 0){
+          shop_id = item.shop_sku_id;
+          break;
+        }
+      }
       this.setState({
         selectVisible: this.props.selectShow,
-        sizeSelect: this.props.selectData.sku[0].shop_sku_id
+        sizeSelect: shop_id
       })
     }
   }
 
   componentWillReceiveProps(nextProps,nextState) {
+    // console.log(nextProps);
     if(this.state.selectVisible == false){
+      let shop_id = ''
+      for(let i=0; i<nextProps.selectData.sku.length; i++){
+        let item = nextProps.selectData.sku[i];
+        if(item.stock != 0){
+          shop_id = item.shop_sku_id;
+          break;
+        }
+      }
       this.setState({
-        selectVisible: this.props.selectShow
+        selectVisible: nextProps.selectShow,
+        sizeSelect: shop_id
       })
     }
   }
@@ -48,7 +66,6 @@ export default class Select extends Component {
     let sizeArr = []
     if(sizeNumberList.length>0){
       sizeNumberList.map((tip)=>{
-        console.log(tip)
         sizeArr.push(
           <TouchableOpacity key={tip.shop_sku_id} onPress={()=>this.chooseSize(tip)}>
             <View 
@@ -75,9 +92,17 @@ export default class Select extends Component {
     return sizeArr
   }
 
+  _tagPrice(sale,tag){
+    if(parseInt(sale)!=parseInt(tag)){
+      return(
+        <Text style={styles.tag_price}>¥{parseInt(tag)}</Text>
+      )
+    }
+  }
+
 	render() {
     let selectData = this.props.selectData;
-    console.log(selectData)
+    // console.log(selectData)
     return (
       <SafeAreaView style={{flex:1}}>
         <Modal
@@ -86,52 +111,52 @@ export default class Select extends Component {
           visible={this.state.selectVisible}
         >
           <View style={styles.select}>
-              <View style={styles.sel_box}>
-                <View style={styles.sel_tit}>
+            <View style={styles.sel_box}>
+              <View style={styles.sel_tit}>
+                <Image 
+                  style={styles.sel_tit_img} 
+                  source={selectData.img_optimize_path?{uri:selectData.img_optimize_path}:imgLocation} 
+                />
+                <View style={styles.sel_tit_msg}>
+                  <View style={styles.price}>
+                    <Text style={styles.sale_price}>¥{parseInt(selectData.sale_price)}</Text>
+                    {this._tagPrice(selectData.sale_price,selectData.tag_price)}
+                  </View>
+                  <Text numberOfLines={1} style={styles.title}>{selectData.tag_name}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.sel_tit_close}
+                  onPress={()=>this.closeSelectShow()}
+                >
                   <Image 
-                    style={styles.sel_tit_img} 
-                    source={selectData.img_optimize_path?{uri:selectData.img_optimize_path}:imgLocation} 
+                    style={{width: setSize(31),height: setSize(31),}} 
+                    source={imgClose}
                   />
-                  <View style={styles.sel_tit_msg}>
-                    <View style={styles.price}>
-                      <Text style={styles.sale_price}>¥{selectData.sale_price}</Text>
-                      <Text style={styles.tag_price}>¥{selectData.tag_price}</Text>
-                    </View>
-                    <Text numberOfLines={1} style={styles.title}>轻薄轻薄运动塑型裤轻薄运动塑型轻薄轻薄运动塑型裤轻薄运动塑型</Text>
-                  </View>
-                  <TouchableOpacity
-                    style={styles.sel_tit_close}
-                    onPress={()=>this.closeSelectShow()}
-                  >
-                    <Image 
-                      style={{width: setSize(31),height: setSize(31),}} 
-                      source={imgClose}
-                    />
-                  </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
+              </View>
 
-                <View style={styles.size}>
-                  <Text style={styles.size_text}>尺码</Text>
-                  <View style={styles.size_number}>
-                  {this._sizeNumber(selectData.sku)}
-                  </View>
-                </View>
-
-                <View style={styles.color_buy}>
-                  <View style={{flexDirection:'row'}}>
-                    <Text style={styles.color_text}>颜色</Text>
-                    <Text style={styles.color}>{selectData.color}</Text>
-                  </View>
-                  <View>
-                    <Text>+-</Text>
-                  </View>
-                </View>
-
-                <View style={{flexDirection:'row'}}>
-                  <Text style={styles.add_cart}>加入购物车</Text>
-                  <Text style={styles.go_buy}>去购买</Text>
+              <View style={styles.size}>
+                <Text style={styles.size_text}>尺码</Text>
+                <View style={styles.size_number}>
+                {this._sizeNumber(selectData.sku)}
                 </View>
               </View>
+
+              <View style={styles.color_buy}>
+                <View style={{flexDirection:'row'}}>
+                  <Text style={styles.color_text}>颜色</Text>
+                  <Text style={styles.color}>{selectData.color}</Text>
+                </View>
+                <View>
+                  <Text>+-</Text>
+                </View>
+              </View>
+
+              <View style={{flexDirection:'row'}}>
+                <Text style={styles.add_cart}>加入购物车</Text>
+                <Text style={styles.go_buy}>去购买</Text>
+              </View>
+            </View>
           </View>
         </Modal>
       </SafeAreaView>
@@ -141,11 +166,11 @@ export default class Select extends Component {
 
 const styles = StyleSheet.create({
   select:{
+    flex:1,
+    flexDirection: 'column-reverse',
     width: '100%',
     height: '100%',
     backgroundColor: 'rgba(0,0,0,.5)',
-    flex:1,
-    flexDirection: 'column-reverse'
   },
   sel_box:{
     width: '100%',

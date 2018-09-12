@@ -220,6 +220,7 @@ export default class FoundScreen extends React.Component {
         category: category,
         page: 0,
         // data: [],
+        loading: true,
         refreshing: true,
         residue: {}
       },

@@ -23,7 +23,7 @@ export default class BigGoodsImage extends Component {
   componentWillReceiveProps(nextProps,nextState) {
     if(this.state.goodsVisibleData == false){
       this.setState({
-        goodsVisibleData: this.props.goodVisible
+        goodsVisibleData: nextProps.goodVisible
       })
     }
   }
