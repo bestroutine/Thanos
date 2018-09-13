@@ -73,11 +73,16 @@ export default class Content extends Component {
       <SafeAreaView style={{flex: 1}}>
       	<ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
           <SwiperComponent detailPic={this.state.detailPic} />
-          <AuthorComponent detailCreator={this.state.creatorDetail} title={this.state.contentDetail.title}/>
+          <AuthorComponent
+            detailCreator={this.state.creatorDetail}
+            title={this.state.contentDetail.title} 
+            navigation={this.props.navigation}
+          />
           <ShopComponent 
             detailCreator={this.state.creatorDetail}
             detailPic={this.state.detailPic} 
             detailPromotion={this.state.promotionDetail}
+            navigation={this.props.navigation}
           />
       	</ScrollView>
         <View style={{

@@ -1,15 +1,21 @@
 import React, {Component} from 'react';
-import {StyleSheet,View,Text,TextInput,Image} from 'react-native';
+import {StyleSheet,View,Text,TextInput,Image, TouchableOpacity} from 'react-native';
 import { setFont, setSize } from "../../utils/resolution";
 
 export default class Author extends Component {
 	constructor(props) {
   	super(props);
-  	
 	}
 
   componentWillMount() {
   	
+  }
+
+  goToUserList(u_id,url){
+    this.props.navigation.navigate('UserLists',{
+      uId: u_id,
+      autohrUrl: url
+    })
   }
 
 	render() {
@@ -18,12 +24,12 @@ export default class Author extends Component {
     return (
     	<View>
       	<View style={styles.author}>
-          <View style={styles.author_desc}>
+          <TouchableOpacity style={styles.author_desc} onPress={()=>this.goToUserList(this.props.detailCreator.uid,this.props.detailCreator.avatarUrl)}>
             <Image 
               style={styles.au_image} 
               source={{uri: this.props.detailCreator.avatar}} />
             <Text style={styles.au_name}>{this.props.detailCreator.Name}</Text>
-          </View>
+          </TouchableOpacity>
           <View></View>
         </View>
         <Text style={styles.title_desc}>{this.props.title}</Text>

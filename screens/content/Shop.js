@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,View,Text,TextInput,Image} from 'react-native';
+import {StyleSheet,View,Text,TextInput,Image, TouchableOpacity} from 'react-native';
 import { setFont, setSize } from "../../utils/resolution";
 import GoodList from './GoodList'
 
@@ -8,6 +8,11 @@ export default class Shop extends Component {
   	super(props);
 	}
 
+  goToShopList(shop_id){
+    this.props.navigation.navigate('ShopLists',{
+      shop_Id: shop_id
+    })
+  }
 
 	render() {
     // console.log(this.props.detailCreator)
@@ -24,7 +29,7 @@ export default class Shop extends Component {
             height: setSize(140),
           }}
         >
-        	<View style={styles.shop_title}>
+        	<TouchableOpacity style={styles.shop_title} onPress={()=>this.goToShopList(creatorData.shopId)}>
             <View style={styles.shop_desc}>
               <Image 
                 style={styles.shop_img} 
@@ -35,7 +40,7 @@ export default class Shop extends Component {
             <View>
               <Text style={styles.goshop_text}>进店看看</Text>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
         <View
           style={{

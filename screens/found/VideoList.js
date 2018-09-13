@@ -19,8 +19,8 @@ import { setFont, setSize } from "../../utils/resolution";
 
 export default class VideoList extends React.Component {
   _onPlay = (id, title) => {
-    console.log(id);
-    console.log(this.props)
+    // console.log(id);
+    // console.log(this.props)
     this.props.navigation.navigate("VideoShow", {
       cTitle: title,
       cId: id

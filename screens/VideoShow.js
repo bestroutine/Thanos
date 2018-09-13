@@ -16,7 +16,6 @@ export default class VideoShowScreen extends React.Component {
     };
   }
   componentWillMount() {
-    console.log(11111);
     const { navigation } = this.props;
     const c_title = navigation.getParam('cTitle');
     this.props.navigation.setParams({'headerTitle': c_title})
@@ -33,11 +32,10 @@ export default class VideoShowScreen extends React.Component {
       }
     })
       .then(res => {
-        console.log("started fetch");
+        // console.log("started fetch");
         return res.json();
       })
       .then(res => {
-        console.log(222222);
         console.log(res.data)
         this.setState({
           videoData: res.data
@@ -56,10 +54,10 @@ export default class VideoShowScreen extends React.Component {
   _handleVideoRef = component => {
     console.log(component)
     const playbackObject = component;
+
   }
 
   render() {
-    console.log(33333)
     return (
       <SafeAreaView style={{flex:1,backgroundColor:'#fff'}}>
       <ScrollView
@@ -70,10 +68,10 @@ export default class VideoShowScreen extends React.Component {
         style={styles.container}
       >
         <Video
+          ref={this._handleVideoRef}
           source={{
             uri:this.state.videoData.video_url
           }}
-          ref={this._handleVideoRef}
           rate={1.0}
           volume={1.0}
           isMuted={false}
