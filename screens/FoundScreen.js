@@ -4,7 +4,7 @@ import {
   View,
 } from "react-native";
 
-import TabList from './found/TabLists'
+import TabList from './UserShopList/TabLists'
 
 export default class FoundScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -25,7 +25,13 @@ export default class FoundScreen extends React.Component {
 
   render() {
     return (
-      <TabList ajax_url='/content/indexNew' ajax_params='' navigation={this.props.navigation} whichEnd='end'/>
+      <TabList 
+      ajax_url='/content/indexNew' 
+      ajax_params='' 
+      navigation={this.props.navigation} 
+      whichEnd='end'
+      userOrShop = '_other'
+    />
     );
   }
 }

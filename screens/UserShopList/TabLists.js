@@ -15,11 +15,13 @@ import {
   TOKEN,
   BRIDGE,
 } from '../../utils/constant';
-import VideoList from './VideoList'
-import PicList from './PicList'
-import EmptyComponent from './EmptyComponent'
+import VideoList from '../found/VideoList'
+import PicList from '../found/PicList'
+import EmptyComponent from '../found/EmptyComponent'
+import UserListHeader from './UserListHeader'
+import ShopListsHeader from './ShopListsHeader'
 
-export default class TabLists extends React.Component {
+export default class OtherTabLists extends React.Component {
 
   componentWillMount() {
     // console.log('will mount')
@@ -72,9 +74,12 @@ export default class TabLists extends React.Component {
       })
       .then(res => {
         console.log(res.data);
-        if(res.data.length == 0){
+        this.setState({
+            data: res.data,
+        });
+        if(res.data.data.length == 0){
           return;
-        } 
+        }
         let new_data = this.state.refreshing ? [] : this.state.newData;
         let v_list = [];
         let p_list = [];
@@ -119,7 +124,7 @@ export default class TabLists extends React.Component {
         if(this.state.category == "3"){
           newarr = [...newvideoarr];
         }else{
-          if(res.data.length>0&&res.data.data[0].contentType==3){
+          if(res.data.data[0].contentType==3){
             //如果第一条是视频
             newarr.push(newvideoarr[0]);
             let n =1;
@@ -180,6 +185,7 @@ export default class TabLists extends React.Component {
         page: 0,
         refreshing: true,
         loading: false,
+        // newData: [],
         data: [],
         residue: {}
       },
@@ -218,7 +224,8 @@ export default class TabLists extends React.Component {
       {
         category: category,
         page: 0,
-        // data: [],
+        // newData: [],
+        data: [],
         loading: true,
         refreshing: true,
         residue: {}
@@ -229,9 +236,22 @@ export default class TabLists extends React.Component {
     );
   };
 
-  render() {
-    return (
-      <View style={styles.container}>
+  _whichHeader(item){
+
+    if(this.state.userOrShop == '_user'){
+      return(
+        <UserListHeader info={item}/>
+      )
+    }else if(this.state.userOrShop == '_shop'){
+      return(
+        <ShopListsHeader info={item.showShop}/>
+      )
+    }
+  }
+
+  _buttonView(){
+    return(
+      <View>
         <View
           style={{
             height: 44,
@@ -259,6 +279,35 @@ export default class TabLists extends React.Component {
             color={this.state.category == "2" ? "#00BBB4" : "#999999"}
           />
         </View>
+      </View>
+    )
+  }
+
+  _showHeader(item){
+    if(this.state.userOrShop != '_other'){
+      return(
+        <View>
+          {this._whichHeader(item)}
+          {this._buttonView()}
+        </View>
+      )
+    }
+  }
+
+  _showBtn(){
+    if(this.state.userOrShop == '_other'){
+      return(
+        <View>
+          {this._buttonView()}
+        </View>
+      )
+    }
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        {this._showBtn()}
         <FlatList
           style={{ flex: 1, backgroundColor: "#FFF" }}
           data={this.state.newData || []}
@@ -275,6 +324,7 @@ export default class TabLists extends React.Component {
             }
           }}
           onEndReached={this.handleLoadMore}
+          ListHeaderComponent={this._showHeader(this.state.data)}
         />
       </View>
     );
