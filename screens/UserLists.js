@@ -25,7 +25,7 @@ export default class UserLists extends React.Component {
         <StatusBar barStyle='light-content' />
           <TabList 
             ajax_url='/showUserInfo/authorContentList'
-            ajax_prames={'&userId='+this.state.uId}
+            ajax_prames={'&userId='+this.props.navigation.getParam('uId')}
             navigation={this.props.navigation}
             whichEnd='pageSize'
             userOrShop = '_user'

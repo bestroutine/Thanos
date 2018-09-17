@@ -21,13 +21,13 @@ export default class PicList extends React.Component {
     super(props);
   }
   toContent(cId,cTitle){
-    this.props.navigation.navigate('Content',{
+    this.props.navigation.push('Content',{
       cId: cId,
       cTitle: cTitle,
     })
   }
   _userShop(one_data,type){
-    console.log(type)
+    // console.log(type)
     if(type=='_user'||type=='_other'){
       return(
         <View

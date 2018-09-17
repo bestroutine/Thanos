@@ -12,7 +12,8 @@ export default class Author extends Component {
   }
 
   goToUserList(u_id,url){
-    this.props.navigation.navigate('UserLists',{
+    console.log(u_id)
+    this.props.navigation.push('UserLists',{
       uId: u_id,
       autohrUrl: url
     })

@@ -15,7 +15,7 @@ export default class Content extends Component {
 	constructor(props) {
   	super(props);
   	this.state = {
-      cId: this.props.navigation.getParam('cId'), //内容id
+      cId: '', //内容id
       detailPic: [],  //图片内容的数据
       contentDetail: {},
       creatorDetail: {},
@@ -25,19 +25,18 @@ export default class Content extends Component {
 	}
 
   componentWillMount() {
-    this.request();
-  	const { navigation } = this.props;
-    const c_title = navigation.getParam('cTitle');
-    this.props.navigation.setParams({'headerTitle': c_title})
+    this.request(this.props.navigation.getParam('cId'));
+    let title = this.props.navigation.getParam('cTitle');
+    this.props.navigation.setParams({'headerTitle': title})
   }
 
   goToBuy(){
     Alert.alert('未开启支付功能，请线下店铺购买！');
   }
 
-  request = () => {
+  request = (c_id) => {
     const url = `${BRIDGE}/content/show?cid=${
-      this.state.cId
+      c_id
     }`;
     fetch(url, {
       method: "GET",

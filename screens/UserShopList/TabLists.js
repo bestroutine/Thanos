@@ -21,17 +21,9 @@ import EmptyComponent from '../found/EmptyComponent'
 import UserListHeader from './UserListHeader'
 import ShopListsHeader from './ShopListsHeader'
 
-export default class OtherTabLists extends React.Component {
-
-  componentWillMount() {
-    // console.log('will mount')
-    this.request();
-  }
+export default class TabLists extends React.Component {
   constructor(props) {
     super(props);
-    // console.log(this.props.ajax_url)
-    // console.log(this.props.ajax_prames)
-
     this.state = {
       ajax_url: this.props.ajax_url,
       ajax_prames: this.props.ajax_prames || '',
@@ -50,6 +42,11 @@ export default class OtherTabLists extends React.Component {
     };
   }
 
+  componentWillMount() {
+    // console.log('will mount')
+    this.request();
+  }
+
   request = () => {
     this.setState({
       loading: true
@@ -61,7 +58,7 @@ export default class OtherTabLists extends React.Component {
     }&listType=${
       this.state.category
     }${this.state.ajax_prames}`;
-    console.log(url);
+    // console.log(url);
     fetch(url, {
       method: "GET",
       headers: {
@@ -69,11 +66,11 @@ export default class OtherTabLists extends React.Component {
       }
     })
       .then(res => {
-        console.log("started fetch");
+        // console.log("started fetch");
         return res.json();
       })
       .then(res => {
-        console.log(res.data);
+        // console.log(res.data);
         this.setState({
             data: res.data,
         });

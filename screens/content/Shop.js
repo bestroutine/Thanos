@@ -9,7 +9,7 @@ export default class Shop extends Component {
 	}
 
   goToShopList(shop_id){
-    this.props.navigation.navigate('ShopLists',{
+    this.props.navigation.push('ShopLists',{
       shop_Id: shop_id
     })
   }

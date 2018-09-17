@@ -12,7 +12,7 @@ export default class BigGoodsImage extends Component {
     }
 	}
 
-  componentWillMount(nextProps,nextState) {
+  componentWillMount() {
     if(this.state.goodsVisibleData == false){
       this.setState({
         goodsVisibleData: this.props.goodVisible
