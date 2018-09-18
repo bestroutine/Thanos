@@ -3,10 +3,10 @@
     "name": "thanos",
     "description": "A very interesting project.",
     "slug": "thanos",
-    "privacy": "unlisted",
+    "privacy": "public",
     "sdkVersion": "29.0.0",
     "platforms": ["ios", "android"],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/1024.png",
     "splash": {
@@ -18,15 +18,14 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
-      "**/*",
-      "assets/images/*"
+      "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.belle.thanos"
+      "bundleIdentifier": "com.wonhigh.belleTone"
     },
     "android": {
-      "package": "com.belle.thanos"
+      "package": "com.wonhigh.belleTone"
     }
   }
 }

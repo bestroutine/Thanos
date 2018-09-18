@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,View,Text,TextInput,Image,ScrollView,SafeAreaView,Alert} from 'react-native';
+import {StyleSheet,View,Text,TextInput,Image,ScrollView,SafeAreaView,Alert,StatusBar} from 'react-native';
 import { setFont, setSize } from "../utils/resolution";
 import {
   TOKEN,
@@ -70,6 +70,7 @@ export default class Content extends Component {
 	render() {
     return (
       <SafeAreaView style={{flex: 1}}>
+        <StatusBar barStyle='dark-content' />
       	<ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
           <SwiperComponent detailPic={this.state.detailPic} />
           <AuthorComponent
