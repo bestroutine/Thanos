@@ -22,7 +22,7 @@ export default class ShopLists extends React.Component {
             ajax_prames={'&shopId='+this.state.shopId}
             navigation={this.props.navigation}
             whichEnd='pageSize'
-            userOrShop = '_shop'
+            pageType = '_shop'
           />
       </SafeAreaView>
     );

@@ -28,7 +28,7 @@ export default class TabLists extends React.Component {
       ajax_url: this.props.ajax_url,
       ajax_prames: this.props.ajax_prames || '',
       whichEnd: this.props.whichEnd,
-      userOrShop: this.props.userOrShop,
+      pageType: this.props.pageType,
       error: false,
       page: 0,
       pageSize: 10,
@@ -74,12 +74,16 @@ export default class TabLists extends React.Component {
         this.setState({
             data: res.data,
         });
-        if(res.data.data.length == 0){
-          return;
-        }
         let new_data = this.state.refreshing ? [] : this.state.newData;
         let v_list = [];
         let p_list = [];
+        if(res.data.data.length == 0){
+          this.setState({
+            refreshing: false,
+            newData:[...new_data]
+          });
+          return;
+        }
         res.data.data.map((item)=>{
           if(item.contentType==3){
             v_list.push(item);
@@ -193,7 +197,7 @@ export default class TabLists extends React.Component {
   };
 
   handleLoadMore = () => {
-    console.log('handle111111111')
+    // console.log('handle111111111')
     this.setState(
       {
         page: this.state.page + this.state.pageSize
@@ -206,14 +210,14 @@ export default class TabLists extends React.Component {
 
   renderItem = ({ item }) => {
     if (item[0].contentType == 3) {
-      return(<VideoList item={item[0]} navigation={this.props.navigation} userShopType={this.state.userOrShop}/>)
+      return(<VideoList item={item[0]} navigation={this.props.navigation} userShopType={this.state.pageType}/>)
     } else{
-      return (<PicList item={item} navigation={this.props.navigation} userShopType={this.state.userOrShop}/>);
+      return (<PicList item={item} navigation={this.props.navigation} userShopType={this.state.pageType}/>);
     }
   };
 
   emptyComponent = height => (
-    <EmptyComponent contentListHeight={this.state.contentListHeight} />
+    <EmptyComponent contentListHeight={this.state.contentListHeight} pageType={this.state.pageType}/>
   );
 
   onCategoryChange = category => {
@@ -235,11 +239,11 @@ export default class TabLists extends React.Component {
 
   _whichHeader(item){
 
-    if(this.state.userOrShop == '_user'){
+    if(this.state.pageType == '_user'){
       return(
         <UserListHeader info={item}/>
       )
-    }else if(this.state.userOrShop == '_shop'){
+    }else if(this.state.pageType == '_shop'){
       return(
         <ShopListsHeader info={item.showShop}/>
       )
@@ -281,7 +285,7 @@ export default class TabLists extends React.Component {
   }
 
   _showHeader(item){
-    if(this.state.userOrShop != '_other'){
+    if(this.state.pageType == '_user'||this.state.pageType == '_shop'){
       return(
         <View>
           {this._whichHeader(item)}
@@ -292,7 +296,9 @@ export default class TabLists extends React.Component {
   }
 
   _showBtn(){
-    if(this.state.userOrShop == '_other'){
+    if(this.state.pageType == '_other'||
+       this.state.pageType == '_love'||
+       this.state.pageType == '_create'){
       return(
         <View>
           {this._buttonView()}

@@ -1,6 +1,6 @@
 import React from "react";
 import { ScrollView, StyleSheet, Image, View, Text, SafeAreaView } from "react-native";
-import { setFont, setSize } from "../utils/resolution";
+import { setFont, setSize, screenW, screenH} from "../utils/resolution";
 import { Video } from "expo";
 import {
   TOKEN,
@@ -12,7 +12,9 @@ export default class VideoShowScreen extends React.Component {
     super(props);
     this.state = {
       cId: this.props.navigation.getParam('cId'),
-      videoData: {}
+      videoData: {},
+      videoH: screenH,
+      videoW: screenW
     };
   }
   componentWillMount() {
@@ -52,19 +54,21 @@ export default class VideoShowScreen extends React.Component {
   }
 
   _handleVideoRef = component => {
-    console.log(component)
     const playbackObject = component;
 
   }
 
+  onLayout = (event)=>{
+    // console.log(event.nativeEvent.layout)
+    this.setState({
+      videoH: event.nativeEvent.layout.height,
+      videoW: event.nativeEvent.layout.width
+    })
+  }
   render() {
     return (
-      <SafeAreaView style={{flex:1,backgroundColor:'#fff'}}>
+      <SafeAreaView style={{flex:1,backgroundColor:'#fff'}} onLayout = {(event)=>this.onLayout(event)}>
       <ScrollView
-        contentContainerStyle={{
-          flex: 1,
-          alignItems: "center",
-        }}
         style={styles.container}
       >
         <Video
@@ -79,11 +83,11 @@ export default class VideoShowScreen extends React.Component {
           resizeMode="contain"
           shouldPlay={true}
           isLooping={true}
-          style={styles.video}
+          style={{width:this.state.videoW,height:this.state.videoH}}
         />
         <View>
           <Text style={{ color: "#999999", fontSize: 14 }}>
-            {JSON.stringify(this.props.navigation.state.params)}
+
           </Text>
         </View>
       </ScrollView>
@@ -94,11 +98,6 @@ export default class VideoShowScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: "#000000"
   },
-  video: {
-    height: "100%",
-    width: '100%',
-  }
 });

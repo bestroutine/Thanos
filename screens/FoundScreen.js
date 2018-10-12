@@ -26,12 +26,12 @@ export default class FoundScreen extends React.Component {
   render() {
     return (
       <TabList 
-      ajax_url='/content/indexNew' 
-      ajax_params='' 
-      navigation={this.props.navigation} 
-      whichEnd='end'
-      userOrShop = '_other'
-    />
+        ajax_url='/content/indexNew' 
+        ajax_params='' 
+        navigation={this.props.navigation} 
+        whichEnd='end'
+        pageType = '_other'
+      />
     );
   }
 }

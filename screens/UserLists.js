@@ -28,7 +28,7 @@ export default class UserLists extends React.Component {
             ajax_prames={'&userId='+this.props.navigation.getParam('uId')}
             navigation={this.props.navigation}
             whichEnd='pageSize'
-            userOrShop = '_user'
+            pageType = '_user'
           />
       </SafeAreaView>
     );
