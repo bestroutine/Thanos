@@ -4,7 +4,7 @@ import { setFont, setSize } from "../../utils/resolution";
 const bag = require('../../assets/images/pages/bag.png');
 const no_bag = require('../../assets/images/pages/no_bag.png');
 
-export default class Author extends Component {
+export default class FootAccount extends Component {
 	constructor(props) {
   	super(props);
 	}

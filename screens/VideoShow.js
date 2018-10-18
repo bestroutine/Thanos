@@ -9,6 +9,7 @@ import {
 import AuthorComponent from './content/Author';
 import ShopComponent from './content/Shop';
 import FootAccount from './content/FootAccount';
+import ServiceNote from './content/ServiceNote';
 
 export default class VideoShowScreen extends React.Component {
   constructor(props) {
@@ -99,6 +100,7 @@ export default class VideoShowScreen extends React.Component {
           title={this.state.videoData.title} 
           navigation={this.props.navigation}
         />
+        <ServiceNote />
         <ShopComponent 
           detailCreator={this.state.creatorDetail}
           detailPic={this.state.detailPic} 

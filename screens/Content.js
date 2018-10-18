@@ -9,6 +9,7 @@ import SwiperComponent from './content/Swiper';
 import AuthorComponent from './content/Author';
 import ShopComponent from './content/Shop';
 import FootAccount from './content/FootAccount';
+import ServiceNote from './content/ServiceNote';
 
 export default class Content extends Component {
 	constructor(props) {
@@ -29,9 +30,6 @@ export default class Content extends Component {
     this.props.navigation.setParams({'headerTitle': title})
   }
 
-  goToBuy(){
-    Alert.alert('未开启支付功能，请线下店铺购买！');
-  }
 
   request = (c_id) => {
     const url = `${BRIDGE}/content/show?cid=${
@@ -77,6 +75,7 @@ export default class Content extends Component {
             title={this.state.contentDetail.title} 
             navigation={this.props.navigation}
           />
+          <ServiceNote />
           <ShopComponent 
             detailCreator={this.state.creatorDetail}
             detailPic={this.state.detailPic} 
