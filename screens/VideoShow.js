@@ -6,6 +6,9 @@ import {
   TOKEN,
   BRIDGE,
 } from '../utils/constant';
+import AuthorComponent from './content/Author';
+import ShopComponent from './content/Shop';
+import FootAccount from './content/FootAccount';
 
 export default class VideoShowScreen extends React.Component {
   constructor(props) {
@@ -14,7 +17,10 @@ export default class VideoShowScreen extends React.Component {
       cId: this.props.navigation.getParam('cId'),
       videoData: {},
       videoH: screenH,
-      videoW: screenW
+      videoW: screenW,
+      creatorDetail: {},
+      detailPic: [],
+      promotionDetail: [],
     };
   }
   componentWillMount() {
@@ -40,7 +46,10 @@ export default class VideoShowScreen extends React.Component {
       .then(res => {
         console.log(res.data)
         this.setState({
-          videoData: res.data
+          videoData: res.data,
+          creatorDetail: res.data.creator,
+          detailPic: res.data.pics,
+          promotionDetail: res.data.promotions || [],
         })
       })
       .catch(err => {
@@ -85,11 +94,21 @@ export default class VideoShowScreen extends React.Component {
           isLooping={true}
           style={{width:this.state.videoW,height:this.state.videoH}}
         />
-        <View>
-          <Text style={{ color: "#999999", fontSize: 14 }}>
-
-          </Text>
-        </View>
+        <AuthorComponent
+          detailCreator={this.state.creatorDetail}
+          title={this.state.videoData.title} 
+          navigation={this.props.navigation}
+        />
+        <ShopComponent 
+          detailCreator={this.state.creatorDetail}
+          detailPic={this.state.detailPic} 
+          detailPromotion={this.state.promotionDetail}
+          navigation={this.props.navigation}
+        />
+        <FootAccount 
+          navigation={this.props.navigation}
+        />
+        
       </ScrollView>
       </SafeAreaView>
     );

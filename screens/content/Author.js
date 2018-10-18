@@ -23,7 +23,7 @@ export default class Author extends Component {
     // console.log(this.props.detailCreator)
     // console.log(this.props.title)
     return (
-    	<View>
+    	<View style={{backgroundColor:'#fff'}}>
       	<View style={styles.author}>
           <TouchableOpacity style={styles.author_desc} onPress={()=>this.goToUserList(this.props.detailCreator.uid,this.props.detailCreator.avatarUrl)}>
             <Image 
