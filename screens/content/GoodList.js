@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {StyleSheet,View,Text,TextInput,Image, Alert, TouchableOpacity} from 'react-native';
 import { setFont, setSize } from "../../utils/resolution";
 import BigGoodsImage from './BigGoodsImage';
+import Select from './Select';
 const imgLocation = require('../../assets/images/pages/img-location.png');
 
 
@@ -11,6 +12,8 @@ export default class GoodList extends Component {
     this.state = {
       bigGoodsShow: false,
       bigGoodsShowData: {},
+      selectShow:false,
+      selectShowData:{}
     }
 	}
 
@@ -25,25 +28,30 @@ export default class GoodList extends Component {
   }
 
   _buttonBuy(flag){
-    if(flag == 0){
+    if(flag.commodity_stock == 0){
       return(
         <Text style={styles.buy_text_no}>购买</Text>
       )
     }else{
       return(
-        <Text style={styles.buy_text} onPress={()=>this.showSelectModule()}>购买</Text>
+        <Text style={styles.buy_text} onPress={()=>this.showSelectModule(flag)}>购买</Text>
       )
     }
   }
 
-  showSelectModule(){
-    Alert.alert('购买弹窗')
+  showSelectModule(item){
+    this.setState({
+      selectShow: true,
+      selectShowData: item,
+      bigGoodsShow:false
+    })
   }
 
   showBigGoods(item){
     this.setState({
       bigGoodsShow: true,
       bigGoodsShowData: item,
+      selectShow:false
     })
   }
 
@@ -87,16 +95,21 @@ export default class GoodList extends Component {
               <View style={styles.buy}>
                 <Text style={styles.buy_price}>¥{parseInt(item.sale_price)}</Text>
                 <View style={styles.buy_button}>
-                  {this._buttonBuy(item.commodity_stock)}
+                  {this._buttonBuy(item)}
                 </View>
               </View>
             </View>
           </View>
         )
       })}
-      if(goodData.length>0){
+      if(this.state.bigGoodsShow){
         resarr.push(
-          <BigGoodsImage key={goodData.length} goodsData={this.state.bigGoodsShowData} goodVisible={this.state.bigGoodsShow}/>
+          <BigGoodsImage key={goodData.length} goodsData={this.state.bigGoodsShowData} goodVisible={this.state.bigGoodsShow}/>,
+        )
+      }
+      if(this.state.selectShow){
+        resarr.push(
+          <Select key={'select_'+goodData.length} selectData={this.state.selectShowData} selectShow={this.state.selectShow}/>
         )
       }
       return resarr

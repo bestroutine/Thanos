@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import {StyleSheet,View,Text,ScrollView} from 'react-native'
+import {StyleSheet,View,Text,ScrollView, SafeAreaView} from 'react-native'
 import {setFont} from '../../utils/resolution';
 
 export default class MyLove extends Component {
   	render() {
 	    return (
+	    	<SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
 	      	<ScrollView style={styles.notice}>
 	        	<Text style={styles.header}>1、退换货承诺</Text>
 		        <View style={styles.item_content}>
@@ -32,6 +33,7 @@ export default class MyLove extends Component {
 		            <Text style={styles.strip}>F、优惠券等非现金的馈赠款项，在退货时不做返还(商品质量问题除外)。</Text>
 		        </View>
 	      	</ScrollView>
+	      	</SafeAreaView>
 	    );
   	}
 }

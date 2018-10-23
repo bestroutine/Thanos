@@ -19,13 +19,76 @@ import { setFont, setSize } from "../../utils/resolution";
 
 export default class VideoList extends React.Component {
   _onPlay = (id, title) => {
-    console.log(id);
-    console.log(this.props)
+    // console.log(id);
+    // console.log(this.props)
     this.props.navigation.navigate("VideoShow", {
       cTitle: title,
       cId: id
     });
   };
+
+  _userShop(one_data,type){
+    if(type=='_user'||type=='_other'){
+      return(
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center"
+          }}
+        >
+          <Image
+            style={{
+              height: setSize(32),
+              width: setSize(32),
+              marginRight: setSize(10)
+            }}
+            source={require("../../assets/images/pages/shop_icon.png")}
+          />
+          <Text
+            style={{
+              fontSize: 11,
+              height: 14,
+              color: "#999"
+            }}
+          >
+            {one_data.shopName}
+          </Text>
+        </View>
+      )
+    }else if(type == '_shop'){
+      return(
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center"
+          }}
+        >
+          <Image
+            style={{
+              height: setSize(32),
+              width: setSize(32),
+              marginRight: setSize(10),
+              borderRadius: setSize(16)
+            }}
+            source={{uri:one_data.uinfo.avatarUrl}}
+          />
+          <Text
+            style={{
+              fontSize: 11,
+              height: 14,
+              color: "#999"
+            }}
+          >
+            {one_data.uinfo.nickName}
+          </Text>
+        </View>
+      )
+    }
+  }
 
   render() {
     return (
@@ -87,32 +150,7 @@ export default class VideoList extends React.Component {
             marginTop: 11
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center"
-            }}
-          >
-            <Image
-              style={{
-                height: setSize(32),
-                width: setSize(32),
-                marginRight: setSize(10)
-              }}
-              source={require("../../assets/images/pages/shop_icon.png")}
-            />
-            <Text
-              style={{
-                fontSize: 11,
-                height: 14,
-                color: "#999"
-              }}
-            >
-              {this.props.item.shopName}
-            </Text>
-          </View>
+          {this._userShop(this.props.item,this.props.userShopType)}
           <Text
             style={{
               fontSize: 11,

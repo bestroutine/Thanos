@@ -10,6 +10,8 @@ import MyLove from '../screens/mine/MyLove';
 import MyCreate from '../screens/mine/MyCreate';
 import NoticeScreen from '../screens/mine/Notice';
 import ContentScreen from "../screens/Content";
+import UserListsScreen from "../screens/UserLists";
+import ShopListsScreen from "../screens/ShopLists";
 
 
 const tab = createBottomTabNavigator(
@@ -64,7 +66,7 @@ export const AppNavigator = createStackNavigator(
             screen: NoticeScreen,
             navigationOptions: ({ navigation }) => ({
                 headerTitle:'售后须知',
-                headerBackTitle: null,
+                headerBackTitle: null
             }),
         },
         VideoShow: {
@@ -88,8 +90,7 @@ export const AppNavigator = createStackNavigator(
                 headerBackTitleStyle: {
                     color: "#666666"
                 },
-                tabBarVisible: false,
-                headerBackImage: (<Image source={require("../assets/images/pages/backArrow.png")}/>)
+                tabBarVisible: false
 
             }},
         },
@@ -114,11 +115,32 @@ export const AppNavigator = createStackNavigator(
                 headerBackTitleStyle: {
                     color: "#666666"
                 },
-                tabBarVisible: false,
-                headerBackImage: (<Image source={require("../assets/images/pages/backArrow.png")}/>)
+                tabBarVisible: false
 
             }},
-        }
+        },
+        UserLists: {
+            screen: UserListsScreen,
+            navigationOptions: ({ navigation }) => ({
+                headerTitle:'',
+                headerBackTitle: null,
+                headerStyle: {
+                    backgroundColor: "#000",
+                    borderBottomWidth: 0
+                }
+            }),
+        },
+        ShopLists: {
+            screen: ShopListsScreen,
+            navigationOptions: ({ navigation }) => ({
+                headerTitle:'',
+                headerBackTitle: null,
+                headerStyle: {
+                    backgroundColor: "#000",
+                    borderBottomWidth: 0
+                }
+            })
+        },
     },
     {
     initialRouteName: 'Tab',
@@ -141,6 +163,7 @@ export const AppNavigator = createStackNavigator(
                 backgroundColor: '#fff',
                 borderBottomWidth: 0,
             },
+            headerBackImage: (<Image source={require("../assets/images/pages/backArrow.png")}/>)
         }},
     }
 )

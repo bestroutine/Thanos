@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet,View,Text,TextInput,Image,ScrollView} from 'react-native';
+import {StyleSheet,View,Text,TextInput,Image,ScrollView,SafeAreaView,Alert,StatusBar} from 'react-native';
 import { setFont, setSize } from "../utils/resolution";
 import {
   TOKEN,
@@ -8,12 +8,14 @@ import {
 import SwiperComponent from './content/Swiper';
 import AuthorComponent from './content/Author';
 import ShopComponent from './content/Shop';
+import FootAccount from './content/FootAccount';
+import ServiceNote from './content/ServiceNote';
 
 export default class Content extends Component {
 	constructor(props) {
   	super(props);
   	this.state = {
-      cId: this.props.navigation.getParam('cId'), //内容id
+      cId: '', //内容id
       detailPic: [],  //图片内容的数据
       contentDetail: {},
       creatorDetail: {},
@@ -23,14 +25,15 @@ export default class Content extends Component {
 	}
 
   componentWillMount() {
-    this.request();
-  	const { navigation } = this.props;
-    const c_title = navigation.getParam('cTitle');
-    this.props.navigation.setParams({'headerTitle': c_title})
+    this.request(this.props.navigation.getParam('cId'));
+    let title = this.props.navigation.getParam('cTitle');
+    this.props.navigation.setParams({'headerTitle': title})
   }
-  request = () => {
+
+
+  request = (c_id) => {
     const url = `${BRIDGE}/content/show?cid=${
-      this.state.cId
+      c_id
     }`;
     fetch(url, {
       method: "GET",
@@ -43,7 +46,7 @@ export default class Content extends Component {
         return res.json();
       })
       .then(res => {
-        // console.log(res.data)
+        console.log(res.data)
         this.setState({
           detailPic: res.data.pics,
           contentDetail: res.data,
@@ -63,15 +66,25 @@ export default class Content extends Component {
 
 	render() {
     return (
-    	<ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
-        <SwiperComponent detailPic={this.state.detailPic} />
-        <AuthorComponent detailCreator={this.state.creatorDetail} title={this.state.contentDetail.title}/>
-        <ShopComponent 
-          detailCreator={this.state.creatorDetail}
-          detailPic={this.state.detailPic} 
-          detailPromotion={this.state.promotionDetail}
-        />
-    	</ScrollView>
+      <SafeAreaView style={{flex: 1}}>
+        <StatusBar barStyle='dark-content' />
+      	<ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
+          <SwiperComponent detailPic={this.state.detailPic} />
+          <AuthorComponent
+            detailCreator={this.state.creatorDetail}
+            title={this.state.contentDetail.title} 
+            navigation={this.props.navigation}
+          />
+          <ServiceNote />
+          <ShopComponent 
+            detailCreator={this.state.creatorDetail}
+            detailPic={this.state.detailPic} 
+            detailPromotion={this.state.promotionDetail}
+            navigation={this.props.navigation}
+          />
+      	</ScrollView>
+        <FootAccount />
+      </SafeAreaView>
     );
 	}
 }

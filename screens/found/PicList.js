@@ -19,16 +19,85 @@ import { setFont, setSize } from "../../utils/resolution";
 export default class PicList extends React.Component {
   constructor(props) {
     super(props);
-    // console.log('++++++++++++++')
-    // console.log(this.props)
   }
   toContent(cId,cTitle){
-    this.props.navigation.navigate('Content',{
+    this.props.navigation.push('Content',{
       cId: cId,
       cTitle: cTitle,
     })
   }
-  renderMessage(one_data){
+  _userShop(one_data,type){
+    // console.log(type)
+    if(type=='_user'||type=='_other'){
+      return(
+        <View
+          style={{
+            flex:1,
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            style={{
+              height: setSize(32),
+              width: setSize(32),
+              marginRight: setSize(10)
+            }}
+            source={require("../../assets/images/pages/shop_icon.png")}
+          />
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: 11,
+              height: 14,
+              color: "#999",
+              width: setSize(160)
+            }}
+          >
+            {one_data.shopName}
+          </Text>
+        </View>
+      )
+
+    }else if(type == '_shop'){
+      return(
+        <View
+          style={{
+            flex:1,
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            style={{
+              height: setSize(32),
+              width: setSize(32),
+              marginRight: setSize(10),
+              borderRadius: setSize(16)
+            }}
+            source={{uri:one_data.uinfo.avatarUrl}}
+          />
+          <Text
+            numberOfLines={1}
+            style={{
+              fontSize: 11,
+              height: 14,
+              color: "#999",
+              width: setSize(160)
+            }}
+          >
+            {one_data.uinfo.nickName}
+          </Text>
+        </View>
+      )
+    }
+  }
+
+  renderMessage(one_data,type){
+    // console.log('[[[[[[[[[[[[[[[[')
+    // console.log(one_data)
     return(
       <View
         style={{
@@ -66,34 +135,7 @@ export default class PicList extends React.Component {
               marginTop: setSize(16),
             }}
           >
-            <View
-              style={{
-                flex:1,
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-              }}
-            >
-              <Image
-                style={{
-                  height: setSize(32),
-                  width: setSize(32),
-                  marginRight: setSize(10)
-                }}
-                source={require("../../assets/images/pages/shop_icon.png")}
-              />
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontSize: 11,
-                  height: 14,
-                  color: "#999",
-                  width: setSize(160)
-                }}
-              >
-                {one_data.shopName}
-              </Text>
-            </View>
+            {this._userShop(one_data,type)}
             <View
               style={{
                 justifyContent: "flex-end",
@@ -177,9 +219,9 @@ export default class PicList extends React.Component {
           padding: setSize(30)
         }}
       >
-        {this.renderMessage(this.props.item[0])}
+        {this.renderMessage(this.props.item[0],this.props.userShopType)}
         <View style={{ width: setSize(30) }} />
-        {this.renderMessage(this.props.item[1])}
+        {this.renderMessage(this.props.item[1],this.props.userShopType)}
       </View>
     );
   }
